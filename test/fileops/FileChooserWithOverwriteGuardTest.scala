@@ -1,9 +1,9 @@
 package fileops
 
-import java.io.{File, FileWriter, IOException}
+import java.io.{File, FileWriter}
 import java.time.LocalDateTime
 
-import org.junit.jupiter.api.{AfterAll, AfterEach, BeforeAll, BeforeEach, Test, TestInstance}
+import org.junit.jupiter.api.{AfterAll, BeforeAll, Test, TestInstance}
 import org.junit.jupiter.api.Assertions._
 import org.junit.jupiter.api.TestInstance.Lifecycle
 
@@ -11,18 +11,25 @@ import org.junit.jupiter.api.TestInstance.Lifecycle
 class FileChooserWithOverwriteGuardTest {
   private val tempDirPath = System.getProperty("java.io.tmpdir")
   private val tempDir = new File(tempDirPath)
-  private val exampleFileName = "example_" + LocalDateTime.now().toString + ".txt"
+  private val fileCreationDate = LocalDateTime.now
+  private val exampleFileName = "example_" +
+    fileCreationDate.toString.replace(":", "") + ".txt"
   private val examplePath = tempDirPath + File.separatorChar + exampleFileName
   private val exampleFile = new File(examplePath)
 
   @BeforeAll def setUpClass(): Unit = {
-    if (exampleFile.exists()) {
-      println("Example file " + exampleFileName + "already exists in " +
-        tempDirPath + "; it will be overwritten and deleted")
-    } else {
+    val msg1 = "File " + exampleFileName + " should not already exist"
+    assert(!exampleFile.exists(), msg1)
+    if (exampleFile.createNewFile()) {
       println("Successfully created " + exampleFileName + " in " + tempDirPath)
     }
-    // TODO: Overwrite example file
+    val fileContents = "This file created on " + fileCreationDate.toString +
+      " should have been deleted when the tests concluded. Please close and delete."
+    val writer = new FileWriter(exampleFile)
+    writer.write(fileContents)
+    writer.close()
+    val msg2 = "Example file should have nonzero file size"
+    assert(exampleFile.getTotalSpace > 0, msg2)
   }
 
   // TODO: Write test
