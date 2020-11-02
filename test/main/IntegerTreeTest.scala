@@ -42,9 +42,18 @@ class IntegerTreeTest {
     assertEquals(expected, actual)
   }
 
-  // TODO: Write test
-  @Test def testPrecursorsPathPertainingTo1(): Unit = {
-    fail("Haven't written test yet")
+  /**
+   * Another test of precursors function of class IntegerTree. If there haven't
+   * been any queries for a particular successor, nor has that number been
+   * encountered along any previously traversed path, the list of precursors
+   * should be empty... except when those precursors are on a reasonable short
+   * cycle leading to 1.
+   */
+  @Test def testPrecursorsPertainingTo1(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.classic)
+    val expected = Set(4)
+    val actual = tree.precursors(2)
+    assertEquals(expected, actual)
   }
 
 }

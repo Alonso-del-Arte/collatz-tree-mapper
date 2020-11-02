@@ -9,7 +9,14 @@ object IntegerTree {
 }
 
 class IntegerTree(val fn: Int => Int) {
-  private var map: HashMap[Int, IntegerNode] = HashMap()
+  private var map: HashMap[Int, IntegerNode] = HashMap(1 -> new IntegerNode(1))
+  private var counter = 0
+  private var curr = 1
+  while (!this.map(curr).hasNextAttached
+    && counter < IntegerTree.GENERAL_ITERATION_MAXIMUM) {
+    curr = this.map(curr).getNext.number
+    counter += 1
+  }
 
   private def retrieveNode(n: Int): IntegerNode = {
     if (this.map.contains(n)) {

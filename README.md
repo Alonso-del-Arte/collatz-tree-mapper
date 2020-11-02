@@ -14,4 +14,5 @@ functions around as parameters, so it makes perfect sense to use Scala for this
 program.
 
 Following iterations of the Collatz function is easy. Where it gets tricky is 
-that any given number can have either one or two precursors. [FINISH WRITING] 
+that any given number can have either one or two precursors, or no precursors 
+at all. [FINISH WRITING] 
