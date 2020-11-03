@@ -15,4 +15,8 @@ program.
 
 Following iterations of the Collatz function is easy. Where it gets tricky is 
 that any given number can have either one or two precursors, or no precursors 
-at all. [FINISH WRITING] 
+at all. 
+
+To make this manageable, I've decided to limit the calculations to 32-bit 
+integers. Even so, trying to scan everything in advance could be quite 
+time-consuming. [FINISH WRITING] 

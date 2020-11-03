@@ -37,8 +37,27 @@ class IntegerTree(val fn: Int => Int) {
     retrieveNode(n).getNext.number
   }
 
-  // STUB TO FAIL THE FIRST TEST
-  def path(from: Int, to: Int = 1): Option[List[Int]] = Option.empty
+  def scan(range: Range): Unit = {
+    for (n <- range) retrieveNode(n)
+  }
+
+  def path(from: Int, to: Int = 1): Option[List[Int]] = {
+    if (this.map.contains(from) && this.map.contains(to)) {
+      var curr = from
+      var currNode = this.retrieveNode(curr)
+      var addFlag = true
+      var list = List(currNode)
+      do {
+        currNode = currNode.getNext
+        curr = currNode.number
+        addFlag = !list.contains(currNode)
+        if (addFlag) list = list :+ currNode
+      } while (addFlag && curr != to)
+      if (addFlag) Option(list.map(_.number)) else Option.empty
+    } else {
+      Option.empty
+    }
+  }
 
   private class IntegerNode(val number: Int) {
     private var previous: Set[IntegerNode] = Set()
@@ -67,13 +86,12 @@ class IntegerTree(val fn: Int => Int) {
         val successorNode = if (IntegerTree.this.map.contains(successor)) {
           IntegerTree.this.map(successor)
         } else {
-          val node = new IntegerNode(successor)
-          node.attachPrevious(this)
-          node
+          new IntegerNode(successor)
         }
         successorNode.attachPrevious(this)
         this.attachNext(successorNode)
-        IntegerTree.this.map = IntegerTree.this.map + (successor -> successorNode)
+        IntegerTree.this.map = IntegerTree.this.map +
+          (successor -> successorNode)
         successorNode
       }
     }
