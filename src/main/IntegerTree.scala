@@ -8,6 +8,12 @@ object IntegerTree {
 
 }
 
+/**
+ * Represents a partially calculated tree of integers arranged according to a
+ * function like the Collatz function 3<i>n</i> + 1.
+ * @param fn A function, preferably a pure function. If the range of the
+ *           function exceeds the range of <code>Int</code>,
+ */
 class IntegerTree(val fn: Int => Int) {
   private var map: HashMap[Int, IntegerNode] = HashMap(1 -> new IntegerNode(1))
   private var counter = 0
@@ -28,15 +34,39 @@ class IntegerTree(val fn: Int => Int) {
     }
   }
 
+  /**
+   * Retrieves whatever precursors of a particular number have been encountered
+   * so far. This is not a pure function.
+   * @param n The number for which to find precursors of. For example, 16 for
+   *          the Collatz function.
+   * @return The set of precursors of <code>n</code> that this tree has
+   *         encountered so far. For example, a set containing 5 and 32 if both
+   *         of those numbers have been encountered by this tree. If neither
+   *         number has been encountered, this function will return an empty
+   *         set.
+   */
   def precursors(n: Int): Set[Int] = {
     val precursorNodes = this.retrieveNode(n).getPrevious
     precursorNodes.map(_.number)
   }
 
+  /**
+   * Gives the successor of a particular number. This is not a pure function
+   * because it will sometimes have the side effect of calculating more of the
+   * tree.
+   * @param n The number to give the successor of. For example, 16.
+   * @return The successor of <code>n</code>. As long as no exception occurred
+   *         in the computation, this function will always give a result. For
+   *         example, 8.
+   */
   def successor(n: Int): Int = {
     retrieveNode(n).getNext.number
   }
 
+  /**
+   * Builds more of the tree.
+   * @param range An arithmetic progression of integers.
+   */
   def scan(range: Range): Unit = {
     for (n <- range) retrieveNode(n)
   }
