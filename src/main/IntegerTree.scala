@@ -63,8 +63,10 @@ class IntegerTree(val fn: Int => Int) {
     retrieveNode(n).getNext.number
   }
 
+  // TODO: Finish writing Javadoc
   /**
-   * Builds more of the tree.
+   * Builds more of the tree. Then more numbers will be considered previously
+   * encountered by the [FINISH WRITING]
    * @param range An arithmetic progression of integers.
    */
   def scan(range: Range): Unit = {
@@ -88,6 +90,9 @@ class IntegerTree(val fn: Int => Int) {
       Option.empty
     }
   }
+
+  // STUB TO FAIL THE FIRST TEST
+  def cycle(number: Int): Option[List[Int]] = Option.empty
 
   private class IntegerNode(val number: Int) {
     private var previous: Set[IntegerNode] = Set()

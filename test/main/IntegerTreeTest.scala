@@ -114,6 +114,19 @@ class IntegerTreeTest {
     assert(option.isEmpty, msg)
   }
 
+  @Test def testCycle(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.negCollatz)
+    val option = tree.cycle(13)
+    if (option.isEmpty) {
+      val msg = "Queried cycle from and to 13 should not be empty"
+      fail(msg)
+    } else {
+      val expected = List(1, -2, -1, 4, 2, 1)
+      val actual = option.get
+      assertEquals(expected, actual)
+    }
+  }
+
   @Test def testScan(): Unit = {
     val tree = new IntegerTree(CollatzFunctions.negCollatz)
     tree.scan(-194 to 52)
