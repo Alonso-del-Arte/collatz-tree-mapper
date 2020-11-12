@@ -99,7 +99,8 @@ class IntegerTreeTest {
     }
     val option = tree.path(initial)
     if (option.isEmpty) {
-      val msg = "Queried path from " + initial + " should not be empty"
+      val msg = "Queried path from " + initial +
+        " by Collatz function should not be empty"
       fail(msg)
     } else {
       val actual = option.get
@@ -116,14 +117,32 @@ class IntegerTreeTest {
 
   @Test def testCycle(): Unit = {
     val tree = new IntegerTree(CollatzFunctions.negCollatz)
-    val option = tree.cycle(13)
+    val number = 13
+    val pathLead = tree.successor(number)
+    val path = tree.path(pathLead, number).get
+    val option = tree.cycle(number)
     if (option.isEmpty) {
       val msg = "Queried cycle from and to 13 should not be empty"
       fail(msg)
     } else {
-      val expected = List(1, -2, -1, 4, 2, 1)
+      val expected = number :: path
       val actual = option.get
       assertEquals(expected, actual)
+    }
+  }
+
+  @Test def testCycleCyclicality(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.negCollatz)
+    var cycle = tree.cycle(13).get.dropRight(1)
+    val len = cycle.size
+    var counter = 0
+    while (counter < len) {
+      val recur = cycle.head
+      val expected = cycle :+ recur
+      val actual = tree.cycle(recur).get
+      assertEquals(expected, actual)
+      cycle = cycle.drop(1) :+ recur
+      counter += 1
     }
   }
 
