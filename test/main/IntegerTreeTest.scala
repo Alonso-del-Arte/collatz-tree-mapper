@@ -5,6 +5,35 @@ import scala.util.Random
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions._
 
+object IntegerTreeTest {
+
+  /**
+   * This is a variant of the Collatz function designed to overflow quickly
+   * under certain circumstances. This overly complicated function is provided
+   * for testing purposes only, and should never be made available in a
+   * production context.
+   * @param n An integer. For example, 7.
+   * @return Half `n` if `n` is even, `n` times 127 is `n` is a positive odd
+   *         multiple of 7, `n` times 64 if `n` is one more than a positive
+   *         even multiple of 7, `n` times 31 if `n` is 2 plus a negative odd
+   *         multiple of 7, and thrice `n` plus 1 in all other cases. For
+   *         example, given 7, this function would return 127 &times; 7 = 889.
+   *         Only multiplication by 127 uses `Math.multiplyExact()`, so other
+   *         cases involving odd numbers overflowing will definitely give
+   *         incorrect results.
+   * @throws ArithmeticException If `n` is an odd multiple of 7 greater than
+   *                             16909326.
+   */
+  def collatzVariantQO(n: Int): Int = (n % 2, n % 7) match {
+    case (0, _) => n / 2
+    case (_, 0) => Math.multiplyExact(n, 127)
+    case (_, 1) => 64 * n
+    case (_, -5) => 31 * n
+    case _ => 3 * n + 1
+  }
+
+}
+
 class IntegerTreeTest {
 
   @Test def testGivenFunctionMatches(): Unit = {
@@ -116,6 +145,7 @@ class IntegerTreeTest {
   }
 
   @Test def testCycle(): Unit = {
+    println("cycle")
     val tree = new IntegerTree(CollatzFunctions.negCollatz)
     val number = 13
     val pathLead = tree.successor(number)
@@ -146,7 +176,56 @@ class IntegerTreeTest {
     }
   }
 
+  @Test def testCycleOfOne(): Unit = {
+    def identity(n: Int): Int = n
+    val tree = new IntegerTree(identity)
+    val option = tree.cycle(7)
+    if (option.isEmpty) {
+      fail("Cycle containing only one number shouldn't be empty")
+    } else {
+      val expected = List(7)
+      val actual = option.get
+      assertEquals(expected, actual)
+    }
+  }
+
+  @Test def testQuery(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.negCollatz)
+    tree.scan(-89 to 53)
+    val expected = List(53, -158, -79, 238, 119, -356, -178, -89)
+    val actual = tree.query(53, -89)
+    assertEquals(expected, actual)
+  }
+
+  @Test def testQueryShouldAnswerWithoutPriorScan(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.classic)
+    val expected = List(84, 42, 21, 64)
+    val actual = tree.query(84, 64)
+    assertEquals(expected, actual)
+  }
+
+  @Test def testQueryInterruptedIteration(): Unit = {
+    val tree = new IntegerTree(IntegerTreeTest.collatzVariantQO)
+    try {
+      val badResult = tree.query(7)
+      val msg = "Querying 7 on " + tree.toString +
+        " should have caused an exception, not given result " +
+        badResult.toString
+      fail(msg)
+    } catch {
+      case ae: ArithmeticException => val msg = "Querying 7 on " + tree.toString +
+        " caused ArithmeticException that should have been wrapped"
+        println("\"" + ae.getMessage + "\"")
+        fail(msg)
+      case iie: InterruptedIterationException =>
+        val expected = List(7, 889, 112903, 14338681, 1821012487)
+        val actual = iie.partial
+        assertEquals(expected, actual)
+    }
+  }
+
   @Test def testScan(): Unit = {
+    println("scan")
     val tree = new IntegerTree(CollatzFunctions.negCollatz)
     tree.scan(-194 to 52)
     val option = tree.path(52, -194)
