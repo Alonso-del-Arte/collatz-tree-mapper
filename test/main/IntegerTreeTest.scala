@@ -190,6 +190,7 @@ class IntegerTreeTest {
   }
 
   @Test def testQuery(): Unit = {
+    println("query")
     val tree = new IntegerTree(CollatzFunctions.negCollatz)
     tree.scan(-89 to 53)
     val expected = List(53, -158, -79, 238, 119, -356, -178, -89)
@@ -201,6 +202,20 @@ class IntegerTreeTest {
     val tree = new IntegerTree(CollatzFunctions.classic)
     val expected = List(84, 42, 21, 64)
     val actual = tree.query(84, 64)
+    assertEquals(expected, actual)
+  }
+
+  @Test def testQueryStartAndEndSame(): Unit = {
+    val tree = new IntegerTree(CollatzFunctions.oneXPlus1)
+    val expected = List(103)
+    val actual = tree.query(103, 103)
+    assertEquals(expected, actual)
+  }
+
+  @Test def testQueryNoPath(): Unit = {
+    val tree = new IntegerTree(IntegerTreeTest.collatzVariantQO)
+    val expected = List()
+    val actual = tree.query(1, 65)
     assertEquals(expected, actual)
   }
 
@@ -218,6 +233,9 @@ class IntegerTreeTest {
         println("\"" + ae.getMessage + "\"")
         fail(msg)
       case iie: InterruptedIterationException =>
+        println("Querying 7 on " + tree.toString
+          + " correctly caused InterruptedIterationException")
+        println("\"" + iie.getMessage + "\"")
         val expected = List(7, 889, 112903, 14338681, 1821012487)
         val actual = iie.partial
         assertEquals(expected, actual)

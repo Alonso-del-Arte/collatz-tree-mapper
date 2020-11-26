@@ -138,8 +138,66 @@ class IntegerTree(val fn: Int => Int) {
     }
   }
 
-  // STUB TO FAIL THE FIRST TEST
-  def query(start: Int, end: Int = 1): List[Int] = List(0)
+  private def queryDiffPoints(start: Int, end: Int = 1): List[Int] = {
+    val startNode = this.retrieveNode(start)
+    val endNode = this.retrieveNode(end)
+    var list = List(startNode)
+    var currNode = startNode
+    var foundEnd = false
+    var soFarDistinct = true
+    try {
+      do {
+        currNode = currNode.getNext
+        foundEnd = currNode == endNode
+        soFarDistinct = !list.contains(currNode)
+        list = list :+ currNode
+      } while (!foundEnd && soFarDistinct)
+      if (foundEnd) list.map(_.number) else List()
+    } catch {
+      case re: RuntimeException =>
+        val excMsg = re.getClass.getName +
+          " occurred for calculating successor of " + currNode.number
+        throw new InterruptedIterationException(excMsg, re,
+          list.map(_.number), this.fn)
+    }
+  }
+
+  /**
+   * Queries two numbers in the tree. This function tries to always give a
+   * result in some form.
+   * @param start The number to start with. For example, 27.
+   * @param end The number to end with. If omitted, 1 is filled in. For
+   *            example, 47.
+   * @return Either an empty list of a list starting with `start` and ending
+   *         with `end` (if `start` and `end` are the same, the list will only
+   *         contain one number, in contrast to `path()`, which returns an
+   *         empty option in that case). For example, given the classic Collatz
+   *         function, starting with 27 and ending with 47 gives a list
+   *         consisting of 27, 82, 41, 124, 62, 31, 94, 47. But with the
+   *         negative Collatz function (&minus;3<i>n</i> + 1), a `start` of 27
+   *         and an `end` of 47 gives an empty list; if `end` is tacitly or
+   *         explicitly 1, this function gives a list consisting of 27,
+   *         &minus;80, &minus;40, &minus;20, &minus;10, -5, 16, 8, 4, 2, 1.
+   * @throws main.InterruptedIterationException If a runtime exception (most
+   *                                            likely `ArithmeticException`)
+   *                                            occurs, interrupting the
+   *                                            iteration. For example,
+   *                                            querying 477218591 for `start`
+   *                                            and almost any `Int` with the
+   *                                            Collatz function will cause
+   *                                            this exception. Then you can
+   *                                            use this exception's `partial`
+   *                                            getter to retrieve the partial
+   *                                            list 477218591, 1431655774,
+   *                                            715827887 (the next number,
+   *                                            2147483662, is just outside the
+   *                                            range of `Int`. And you can use
+   *                                            `getCause()` to retrieve the
+   *                                            original exception object.
+   */
+  def query(start: Int, end: Int = 1): List[Int] = {
+    if (start == end) List(end) else queryDiffPoints(start, end)
+  }
 
   private class IntegerNode(val number: Int) {
     private var previous: Set[IntegerNode] = Set()
