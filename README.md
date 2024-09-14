@@ -23,6 +23,9 @@ time-consuming. [FINISH WRITING]
 
 I started this project in Scala 2 with Java 8. I forgot about this project for 
 almost four years. In the interim, I upgraded to Java 21, and found that the 
-Scala 2 REPL could no longer function. So I had to upgrade to Scala 3. But as I 
-intend to resume work in IntelliJ IDEA, I'll probably continue with Scala 2 and 
-Java 8 for the project.
+Scala 2 REPL could no longer function. So I had to upgrade to Scala 3.
+
+But as I intend to resume work in IntelliJ IDEA, which by default retains the 
+original JDK and SDK choices even if the general system is upgraded, I'll 
+probably continue with Scala 2 and Java 8 when working directly on the source 
+and tests.
