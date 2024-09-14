@@ -20,3 +20,9 @@ at all.
 To make this manageable, I've decided to limit the calculations to 32-bit 
 integers. Even so, trying to scan everything in advance could be quite 
 time-consuming. [FINISH WRITING] 
+
+I started this project in Scala 2 with Java 8. I forgot about this project for 
+almost four years. In the interim, I upgraded to Java 21, and found that the 
+Scala 2 REPL could no longer function. So I had to upgrade to Scala 3. But as I 
+intend to resume work in IntelliJ IDEA, I'll probably continue with Scala 2 and 
+Java 8 for the project.
