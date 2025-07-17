@@ -29,3 +29,6 @@ But as I intend to resume work in IntelliJ IDEA, which by default retains the
 original JDK and SDK choices even if the general system is upgraded, I'll 
 probably continue with Scala 2 and Java 8 when working directly on the source 
 and tests.
+
+In addition to the mathematical interest, this project also offers a few 
+opportunities to illustrate higher order functions in Scala.
