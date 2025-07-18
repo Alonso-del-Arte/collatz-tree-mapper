@@ -62,7 +62,7 @@ class IntegerTree(val fn: Int => Int) {
    *         8.
    */
   def successor(n: Int): Int = {
-    0;//this.retrieveNode(n).getNext.number
+    this.retrieveNode(n).getNext.number
   }
 
   /**
