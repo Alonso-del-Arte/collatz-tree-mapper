@@ -62,7 +62,7 @@ class IntegerTree(val fn: Int => Int) {
    *         8.
    */
   def successor(n: Int): Int = {
-    this.retrieveNode(n).getNext.number
+    0;//this.retrieveNode(n).getNext.number
   }
 
   /**
@@ -162,6 +162,7 @@ class IntegerTree(val fn: Int => Int) {
     }
   }
 
+  // TODO: Figure out how to link path() in doc
   /**
    * Queries two numbers in the tree. This function tries to always give a
    * result in some form.
