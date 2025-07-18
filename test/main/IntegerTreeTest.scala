@@ -43,10 +43,11 @@ object IntegerTreeTest {
 class IntegerTreeTest {
 
   @Test def testGivenFunctionMatches(): Unit = {
-    val tree = new IntegerTree(CollatzFunctions.negCollatz)
+    val function = IntegerTreeTest.makeCollatzVar()
+    val tree = new IntegerTree(function)
     val random = new Random()
     val number = 2 * random.nextInt(256) + 1
-    val expected = CollatzFunctions.negCollatz(number)
+    val expected = function(number)
     val actual = tree.successor(number)
     assertEquals(expected, actual)
   }
