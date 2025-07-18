@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Assertions._
 
 object IntegerTreeTest {
 
+  def makeCollatzVar(): Int => Int = {
+    val modulus: Int = 2 * Random.nextInt(100) + 3
+    val remainder: Int = Random.nextInt(modulus - 1) + 1
+    n: Int => if (n % 2 == 0) n / 2 else modulus * n + remainder
+  }
+
   /**
    * This is a variant of the Collatz function designed to overflow quickly
    * under certain circumstances. This overly complicated function is provided
